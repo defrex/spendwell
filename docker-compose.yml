@@ -1,0 +1,30 @@
+version: '2'
+
+services:
+
+  postgres:
+    image: postgres:9.6
+    volumes:
+      - postgresql_data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_PASSWORD=dbpass
+
+  redis:
+    image: redis:2.8.23
+    volumes:
+      - redis_data:/var/lib/redis/data
+
+  app:
+    build: .
+    command: ./manage.py runserver 0.0.0.0
+    links:
+      - postgres
+      - redis
+    ports:
+      - '8000:8000'
+    volumes:
+      - ./:/var/www
+
+volumes:
+  postgresql_data:
+  redis_data:
