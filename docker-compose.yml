@@ -16,7 +16,7 @@ services:
 
   app:
     build: .
-    command: ./manage.py runserver 0.0.0.0
+    command: python manage.py runserver
     links:
       - postgres
       - redis
