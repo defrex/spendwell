@@ -2,9 +2,9 @@ https://dev.spendwell.co
 
 log / stdout "{status} {method} {path}"
 
-tls /cert/dev_spendwell_co.crt /cert/dev_spendwell_co.key
+tls local/cert/dev_spendwell_co.crt local/cert/dev_spendwell_co.key
 
-proxy / webpack:3000 {
+proxy / localhost:3000 {
     websocket
     except /media
     proxy_header X-Forwarded-Host dev.spendwell.co

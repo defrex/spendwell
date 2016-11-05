@@ -1,9 +1,8 @@
-/*eslint no-var: 0*/
 
 process.env.BABEL_ENV = 'live-reloading'
 
 const webpack = require('webpack')
-const webpackDevServer = require('webpack-dev-server')
+const WebpackDevServer = require('webpack-dev-server')
 
 const config = require('./dev.config')
 
@@ -17,8 +16,8 @@ config.plugins = config.plugins.concat([
   new webpack.HotModuleReplacementPlugin(),
 ])
 
-var compiler = webpack(config)
-var server = new webpackDevServer(compiler, {
+const compiler = webpack(config)
+const server = new WebpackDevServer(compiler, {
   hot: true,
   colors: true,
   noInfo: true,
@@ -32,4 +31,4 @@ var server = new webpackDevServer(compiler, {
   },
 })
 
-server.listen(3000, () => console.log('localhost:3000'))
+server.listen(3000, () => console.log('Webpack Dev Server started on port 3000'))
