@@ -51,7 +51,6 @@ export class DisableAccountMutation extends Relay.Mutation {
   }
 }
 
-
 export class EnableAccountMutation extends Relay.Mutation {
   static fragments = {
     account: () => Relay.QL`
@@ -98,5 +97,43 @@ export class EnableAccountMutation extends Relay.Mutation {
         disabled: false,
       },
     }
+  }
+}
+
+export class CreateAccountMutation extends Relay.Mutation {
+  static fragments = {
+    viewer: () => Relay.QL`
+      fragment on Viewer {
+        id
+      }
+    `,
+  };
+
+  getMutation () {
+    return Relay.QL`mutation { createAccount }`
+  }
+
+  getVariables () {
+    return {
+      institutionId: this.props.institution.id,
+      name: this.props.name,
+    }
+  }
+
+  getFatQuery () {
+    return Relay.QL`
+      fragment on CreateAccountMutationPayload {
+        viewer { dummy }
+      }
+    `
+  }
+
+  getConfigs () {
+    return [{
+      type: 'FIELDS_CHANGE',
+      fieldIDs: {
+        viewer: this.props.viewer.id,
+      },
+    }]
   }
 }

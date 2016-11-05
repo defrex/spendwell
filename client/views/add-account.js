@@ -1,12 +1,15 @@
 
-import { Component } from 'react'
+import { Component, PropTypes } from 'react'
 import Relay from 'react-relay'
 
-import ConnectAccount from 'components/connect-account'
+import CreateAccount from 'components/connect-account'
 import App from 'components/app'
 
-
 class AddAccountView extends Component {
+  static propTypes = {
+    viewer: PropTypes.object,
+  }
+
   render () {
     const { viewer } = this.props
 
@@ -14,21 +17,20 @@ class AddAccountView extends Component {
       <App
         viewer={viewer}
         className='container skinny'
-        title='Connect Accounts'
+        title='Create Account'
       >
-        <ConnectAccount viewer={viewer}/>
+        <CreateAccount viewer={viewer}/>
       </App>
     )
   }
 }
-
 
 AddAccountView = Relay.createContainer(AddAccountView, {
   fragments: {
     viewer: () => Relay.QL`
       fragment on Viewer {
         ${App.getFragment('viewer')}
-        ${ConnectAccount.getFragment('viewer')}
+        ${CreateAccount.getFragment('viewer')}
       }
     `,
   },

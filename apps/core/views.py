@@ -77,17 +77,21 @@ class ClientView(TemplateView):
 class OnboardingView(ClientView):
     template_name = 'core/app.html'
 
+    def dispatch(self, request, *args, **kwargs):
+        return HttpResponseRedirect(reverse('app'))
+
 onboarding_view = login_required(ensure_csrf_cookie(OnboardingView.as_view()))
 
 
 class AppView(ClientView):
     template_name = 'core/app.html'
 
-    def dispatch(self, request, *args, **kwargs):
-        if request.user.accounts.count() == 0:
-            return HttpResponseRedirect(reverse('onboarding'))
-        else:
-            return super(AppView, self).dispatch(request, *args, **kwargs)
+    ## redirects to onboarding flow:
+    # def dispatch(self, request, *args, **kwargs):
+    #     if request.user.accounts.count() == 0:
+    #         return HttpResponseRedirect(reverse('onboarding'))
+    #     else:
+    #         return super(AppView, self).dispatch(request, *args, **kwargs)
 
 app_view = login_required(ensure_csrf_cookie(AppView.as_view()))
 

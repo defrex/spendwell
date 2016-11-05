@@ -66,6 +66,7 @@ class Institution(SWModel):
     plaid_access_token = models.CharField(max_length=255, null=True, blank=True)
     plaid_public_token = models.CharField(max_length=255, null=True, blank=True)
     finicity_id = models.CharField(max_length=255, null=True, blank=True)
+    upload_only = models.BooleanField(default=True)
     reauth_required = models.BooleanField(default=False)
     last_sync = models.DateTimeField(null=True, blank=True)
 
@@ -97,7 +98,7 @@ class Institution(SWModel):
 
     @property
     def plaid_client(self):
-        if not self.plaid_id or not self.plaid_access_token:
+        if self.upload_only or not self.plaid_id or not self.plaid_access_token:
             return
 
         if not hasattr(self, '_plaid_client'):
@@ -111,6 +112,10 @@ class Institution(SWModel):
     @property
     def plaid_data(self):
         if not hasattr(self, '_plaid_data'):
+            if self.plaid_client:
+                self._plaid_data = None
+                return
+
             try:
                 self._plaid_data = self.plaid_client.connect_get().json()
 
@@ -126,7 +131,7 @@ class Institution(SWModel):
 
     @property
     def finicity_client(self):
-        if not self.finicity_id:
+        if not self.finicity_id or self.upload_only:
             return
 
         if not hasattr(self, '_finicity_client'):
@@ -159,6 +164,9 @@ class Institution(SWModel):
                 Account.objects.from_finicity(self, account_data)
 
     def sync_transactions(self, delete_duplicates=False):
+        if self.upload_only:
+            return
+
         new_transactions = []
 
         if self.plaid_client and self.plaid_data:
@@ -199,6 +207,9 @@ class Institution(SWModel):
                 duplicate_transactions.delete()
 
     def sync(self, delete_duplicates=False):
+        if self.upload_only:
+            return
+
         self.sync_accounts()
         self.sync_transactions(delete_duplicates=delete_duplicates)
         self.last_sync = timezone.now()

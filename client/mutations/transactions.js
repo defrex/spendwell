@@ -87,7 +87,6 @@ export class SetIncomeFromSavingsMutation extends Relay.Mutation {
   }
 }
 
-
 export class TransactionQuickAddMutation extends Relay.Mutation {
   static fragments = {
     viewer: () => Relay.QL`
@@ -178,7 +177,6 @@ export class UploadCsvMutation extends Relay.Mutation {
     }]
   }
 }
-
 
 export class DeleteTransactionMutation extends Relay.Mutation {
   static fragments = {

@@ -40,9 +40,30 @@ class EnableAccountMutation(graphene.relay.ClientIDMutation):
         return EnableAccountMutation(account=account)
 
 
+class CreateAccountMutation(graphene.relay.ClientIDMutation):
+    class Input:
+        institution_id = graphene.ID()
+        name = graphene.String()
+
+    viewer = graphene.Field('Viewer')
+
+    @classmethod
+    @with_context
+    def mutate_and_get_payload(cls, input, context, info):
+        from spendwell.schema import Viewer
+
+        Account.objects.create(
+            owner=context.user,
+            institution=instance_for_node_id(input.get('institution_id'), context, info),
+        )
+
+        return CreateAccountMutation(viewer=Viewer())
+
+
 class AccountsMutations(graphene.ObjectType):
     disable_account = graphene.Field(DisableAccountMutation)
     enable_account = graphene.Field(EnableAccountMutation)
+    create_account = graphene.Field(CreateAccountMutation)
 
     class Meta:
         abstract = True
