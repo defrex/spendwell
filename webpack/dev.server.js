@@ -26,7 +26,7 @@ var server = new webpackDevServer(compiler, {
   publicPath: config.output.publicPath,
   proxy: {
     '*': {
-      target: 'http://localhost:8000',
+      target: 'http://django:8000',
       secure: false,
     },
   },

@@ -6,6 +6,8 @@ services:
     image: postgres:9.6
     volumes:
       - postgresql_data:/var/lib/postgresql/data
+    ports:
+      - '5432:5432'
     environment:
       - POSTGRES_PASSWORD=dbpass
 
@@ -14,16 +16,55 @@ services:
     volumes:
       - redis_data:/var/lib/redis/data
 
-  app:
+  celery:
     build: .
-    command: python manage.py runserver
+    command: celery -A spendwell worker -l info
     links:
       - postgres
       - redis
-    ports:
-      - '8000:8000'
     volumes:
       - ./:/var/www
+    environment:
+      - C_FORCE_ROOT=1
+    expose:
+      - '99393'
+
+  django:
+    build: .
+    command: python ./manage.py runserver 0.0.0.0:8000
+    links:
+      - postgres
+      - redis
+      - celery
+    volumes:
+      - ./:/var/www
+    ports:
+      - '8000:8000'
+    expose:
+      - '8000'
+
+  webpack:
+    build: .
+    command: node ./webpack/dev.server.js
+    links:
+      - django
+    volumes:
+      - ./:/var/www
+    ports:
+      - '3000:3000'
+    expose:
+      - '3000'
+
+  caddy:
+    image: abiosoft/caddy:latest
+    links:
+      - webpack
+    volumes:
+      - ./Caddyfile:/etc/Caddyfile
+      - ./local/cert:/cert
+      - ./media:/srv/media
+    ports:
+      - '443:443'
 
 volumes:
   postgresql_data:

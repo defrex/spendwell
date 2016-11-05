@@ -10,7 +10,7 @@ import TransactionList from 'components/transaction-list'
 import CardActions from 'components/card-actions'
 
 
-export default class ListAccount extends Component {
+class ListAccount extends Component {
   static propTypes = {
     onDisable: PropTypes.func.isRequired,
     onClick: PropTypes.func,
