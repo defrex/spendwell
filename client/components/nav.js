@@ -8,18 +8,16 @@ import style from 'sass/components/nav'
 
 import { handleMutationError } from 'utils/network-layer'
 import { AutodetectBillsMutation } from 'mutations/buckets'
-import { SyncInstitutionsMutation } from 'mutations/institutions'
 import eventEmitter from 'utils/event-emitter'
 
 import logoGreen from 'img/logo-green.svg'
 import logoWhite from 'img/logo-white.svg'
 
-
 const isActive = (path) => document.location.pathname.indexOf(path) === 0
-
 
 class Nav extends Component {
   static propTypes = {
+    viewer: PropTypes.object,
     open: PropTypes.bool.isRequired,
     toggleNav: PropTypes.func.isRequired,
   };
@@ -70,34 +68,11 @@ class Nav extends Component {
               <A onClick={() => {
                 Relay.Store.commitUpdate(new AutodetectBillsMutation({ viewer }), {
                   onFailure: handleMutationError,
-                  onSuccess: () => {
-                    console.log('Success: AutodetectBillsMutation')
-                    eventEmitter.emit('forceFetch')
-                  },
+                  onSuccess: () => eventEmitter.emit('forceFetch'),
                 })
               }}>
                 <Icon type='find replace'/>
                 <div className='label'>Autodetect Bills</div>
-              </A>
-            </li>
-          ) : null}
-          {viewer.isAdmin ? (
-            <li>
-              <A onClick={() => {
-                Relay.Store.commitUpdate(new SyncInstitutionsMutation({
-                  viewer,
-                  autodetectBills: false,
-                  estimateIncome: false,
-                }), {
-                  onFailure: handleMutationError,
-                  onSuccess: () => {
-                    console.log('Success: SyncInstitutionsMutation')
-                    eventEmitter.emit('forceFetch')
-                  },
-                })
-              }}>
-                <Icon type='file download'/>
-                <div className='label'>Sync</div>
               </A>
             </li>
           ) : null}
@@ -113,7 +88,6 @@ Nav = Relay.createContainer(Nav, {
       return Relay.QL`
         fragment on Viewer {
           ${AutodetectBillsMutation.getFragment('viewer')}
-          ${SyncInstitutionsMutation.getFragment('viewer')}
 
           email
           isAdmin

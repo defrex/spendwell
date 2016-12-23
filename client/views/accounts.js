@@ -2,7 +2,6 @@
 import _ from 'lodash'
 import { Component, PropTypes } from 'react'
 import Relay from 'react-relay'
-import { browserHistory } from 'react-router'
 
 import CardList from 'components/card-list'
 import Card from 'components/card'
@@ -12,6 +11,8 @@ import App from 'components/app'
 import PrimaryFab from 'components/primary-fab'
 import ListHeading from 'components/list-heading'
 import Icon from 'components/icon'
+import Transition from 'components/transition'
+import CreateInstitutionDialog from 'components/create-institution-dialog'
 
 import styles from 'sass/views/accounts'
 
@@ -20,10 +21,20 @@ class Accounts extends Component {
   static propTypes = {
     viewer: PropTypes.object.isRequired,
     relay: PropTypes.object.isRequired,
-  };
+  }
+
+  state = {
+    createInstitution: false,
+  }
+
+  createInstitutionClosed () {
+    this.forceFetch()
+    this.setState({ createInstitution: false })
+  }
 
   render () {
     const { viewer, relay } = this.props
+    const { createInstitution } = this.state
 
     return (
       <App
@@ -55,14 +66,19 @@ class Accounts extends Component {
 
         <ListHeading>External Accounts</ListHeading>
 
-        <PrimaryFab actions={[
-          {
-            default: true,
-            label: 'New Bank',
-            icon: <Icon type='account balance' color='light'/>,
-            onClick: () => browserHistory.push('/app/accounts/new'),
-          },
-        ]}/>
+        <Transition show={createInstitution}>
+          <CreateInstitutionDialog
+            viewer={viewer}
+            onRequestClose={() => ::this.createInstitutionClosed}
+          />
+        </Transition>
+
+        <PrimaryFab actions={[{
+          default: true,
+          label: 'New Bank',
+          icon: <Icon type='account balance' color='light'/>,
+          onClick: () => this.setState({ createInstitution: true }),
+        }]}/>
       </App>
     )
   }
@@ -74,6 +90,7 @@ Accounts = Relay.createContainer(Accounts, {
       fragment on Viewer {
         ${App.getFragment('viewer')}
         ${Institution.getFragment('viewer')}
+        ${CreateInstitutionDialog.getFragment('viewer')}
 
         isAdmin
 

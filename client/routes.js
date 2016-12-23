@@ -15,9 +15,6 @@ import AddAccount from 'views/add-account'
 import AccountUpload from 'views/account-upload'
 import Bucket from 'views/bucket'
 import Transactions from 'views/transactions'
-import OnboardingAddAccount from 'views/onboarding/add-account'
-import OnboardingAccounts from 'views/onboarding/accounts'
-import OnboardingWalkthrough from 'views/onboarding/walkthrough'
 
 import track from 'utils/track'
 
@@ -47,14 +44,6 @@ export default (
     render={applyRouterMiddleware(useRelay)}
     environment={Relay.Store}
   >
-    <Route path='onboarding'>
-      <IndexRedirect to='connect'/>
-
-      <Route path='connect' component={OnboardingAddAccount} {...viewKwargs}/>
-      <Route path='accounts' component={OnboardingAccounts} {...viewKwargs}/>
-      <Route path='walkthrough' component={OnboardingWalkthrough} {...viewKwargs}/>
-    </Route>
-
     <Route path='app'>
       <IndexRedirect to='dashboard'/>
 

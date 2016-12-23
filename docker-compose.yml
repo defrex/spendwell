@@ -17,37 +17,37 @@ services:
       - redis_data:/var/lib/redis/data
 
   celery:
-    build: .
+    extends:
+      file: docker-compose.base.yml
+      service: django
     command: celery -A spendwell worker -l info
     links:
       - postgres
       - redis
-    volumes:
-      - ./:/var/www
     environment:
       - C_FORCE_ROOT=1
 
-  django:
-    build: .
+  app:
+    extends:
+      file: docker-compose.base.yml
+      service: django
     command: python ./manage.py runserver 0.0.0.0:8000
     links:
       - postgres
       - redis
       - celery
-    volumes:
-      - ./:/var/www
     ports:
       - '8000:8000'
     expose:
       - '8000'
 
   webpack:
-    build: .
+    extends:
+      file: docker-compose.base.yml
+      service: django
     command: node ./webpack/dev.server.js
     links:
-      - django
-    volumes:
-      - ./:/var/www
+      - app
     ports:
       - '3000:3000'
     expose:

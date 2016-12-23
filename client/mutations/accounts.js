@@ -107,6 +107,11 @@ export class CreateAccountMutation extends Relay.Mutation {
         id
       }
     `,
+    institution: () => Relay.QL`
+      fragment on InstitutionNode {
+        id
+      }
+    `,
   };
 
   getMutation () {

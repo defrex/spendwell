@@ -4,7 +4,9 @@ from graphene.relay.types import Edge
 from graphene.utils import with_context
 
 from apps.core.utils import instance_for_node_id
+
 from .schema import AccountNode
+from .models import Account
 
 
 AccountEdge = Edge.for_node(AccountNode)
@@ -55,6 +57,7 @@ class CreateAccountMutation(graphene.relay.ClientIDMutation):
         Account.objects.create(
             owner=context.user,
             institution=instance_for_node_id(input.get('institution_id'), context, info),
+            name=input.get('name'),
         )
 
         return CreateAccountMutation(viewer=Viewer())

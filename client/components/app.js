@@ -6,16 +6,17 @@ import { connect } from 'react-redux'
 import Transition from 'components/transition'
 import Header from 'components/header'
 import Nav from 'components/nav'
-import InstitutionReauth from 'components/institution-reauth'
 import Progress from 'components/progress'
 import Toasts from 'components/toasts'
-import ShutdownNotice from 'components/shutdown-notice'
 
 import eventEmitter from 'utils/event-emitter'
 import style from 'sass/components/app'
 
 class App extends Component {
   static propTypes = {
+    viewer: PropTypes.object,
+    children: PropTypes.array,
+    toasts: PropTypes.array,
     loading: PropTypes.number.isRequired,
     chatlioOpen: PropTypes.bool.isRequired,
     onForceFetch: PropTypes.func,
@@ -71,9 +72,9 @@ class App extends Component {
     const {
       children,
       viewer,
+      toasts,
       back,
       loading,
-      toasts,
       title,
       chatlioOpen,
       className,
@@ -101,8 +102,6 @@ class App extends Component {
         <Toasts toasts={toasts}/>
 
         <div className={`app-container ${className}`}>
-          <ShutdownNotice/>
-          <InstitutionReauth viewer={viewer}/>
           {children}
         </div>
       </div>
@@ -123,7 +122,6 @@ App = Relay.createContainer(App, {
         fragment on Viewer {
           ${Header.getFragment('viewer')}
           ${Nav.getFragment('viewer')}
-          ${InstitutionReauth.getFragment('viewer')}
         }
       `
     },

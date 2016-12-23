@@ -22,8 +22,9 @@ class ListAccount extends Component {
   };
 
   componentWillReceiveProps (nextProps) {
-    if (nextProps.expanded !== this.props.expanded)
+    if (nextProps.expanded !== this.props.expanded) {
       this.props.relay.setVariables({ open: nextProps.expanded })
+    }
   }
 
   loadTransactions () {
