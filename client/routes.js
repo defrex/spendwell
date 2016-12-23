@@ -11,7 +11,6 @@ import useRelay from 'react-router-relay'
 
 import Dashboard from 'views/dashboard'
 import Accounts from 'views/accounts'
-import AddAccount from 'views/add-account'
 import AccountUpload from 'views/account-upload'
 import Bucket from 'views/bucket'
 import Transactions from 'views/transactions'
@@ -53,7 +52,6 @@ export default (
       <Route path='labels/:id' component={Bucket} {...viewKwargs}/>
 
       <Route path='accounts' component={Accounts} {...viewKwargs}/>
-      <Route path='accounts/new' component={AddAccount} {...viewKwargs}/>
       <Route path='accounts/:id/upload' component={AccountUpload} {...viewKwargs}/>
 
       <Route path='transactions' component={Transactions} {...viewKwargs}/>

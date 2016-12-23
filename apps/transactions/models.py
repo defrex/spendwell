@@ -1,16 +1,10 @@
 
-from decimal import Decimal
-from datetime import datetime
-from pytz import timezone
 import logging
 
-from django.core.exceptions import SuspiciousOperation
 from django.db import models
 from django.contrib.postgres.fields import JSONField
 
 from apps.core.models import SWModel, SWQuerySet, SWManager
-from apps.accounts.models import Account
-from apps.finicity.utils import normalize_transaction_description
 
 from .utils import similarity
 
@@ -44,85 +38,6 @@ class TransactionManager(SWManager):
 
     def is_transfer(self, *args, **kwargs):
         return self.get_queryset().is_transfer(*args, **kwargs)
-
-    def from_plaid(self, institution, data):
-        account = Account.objects.get(
-            institution=institution,
-            plaid_id=data['_account'],
-        )
-        if account.disabled:
-            return None
-
-        try:
-            transaction = Transaction.objects.get(plaid_id=data['_id'])
-        except Transaction.DoesNotExist:
-            transaction = Transaction()
-            transaction.plaid_id = data['_id']
-
-        transaction.account = account
-        transaction.owner = institution.owner
-
-        transaction.description = data['name']
-        transaction.amount = -Decimal(data['amount'])
-        transaction.date = datetime(
-            *map(int, data['date'].split('-')),
-            tzinfo=timezone(institution.owner.timezone)
-        )
-        transaction.pending = data['pending']
-        transaction.location = data['meta'].get('location', {})
-        transaction.location['score'] = data.get('score')
-
-        transaction.source = 'plaid'
-
-        transaction.save()
-
-        return transaction
-
-    def from_finicity(self, institution, data):
-        try:
-            account = Account.objects.get(
-                institution=institution,
-                finicity_id=data['accountId'],
-            )
-        except Account.DoesNotExist:
-            logger.warn('Account with Finicity ID {} for institution {} does not exits.'.format(
-                data['accountId'],
-                institution.id,
-            ))
-            return None
-
-        if account.disabled:
-            return None
-
-        try:
-            transaction = Transaction.objects.get(finicity_id=data['id'])
-
-        except Transaction.MultipleObjectsReturned:
-            transaction = Transaction.objects.filter(finicity_id=data['id']).first()
-            logger.exception('Multiple Transactions for finicity_id {}'.format(data['id']))
-
-        except Transaction.DoesNotExist:
-            transaction = Transaction()
-            transaction.finicity_id = data['id']
-
-        if transaction.owner_id and transaction.owner != institution.owner:
-            raise SuspiciousOperation('Finicity transaction owner mispatch')
-
-        transaction.account = account
-        transaction.owner = institution.owner
-
-        transaction.raw_description = data['description']
-        transaction.description = normalize_transaction_description(data['description'])
-        transaction.amount = Decimal(data['amount'])
-        transaction.date = datetime.fromtimestamp(
-            float(data['postedDate']),
-            timezone(institution.owner.timezone),
-        )
-
-        transaction.source = 'finicity'
-
-        transaction.save()
-        return transaction
 
     def detect_transfers(self, owner):
         transactions = self.filter(owner=owner, account__disabled=False)

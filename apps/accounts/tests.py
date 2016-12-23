@@ -80,7 +80,6 @@ class EnableDisableMutationsTestCase(SWTestCase):
                 'input': {
                     'clientMutationId': '12345',
                     'accountId': node_id_from_instance(account_1),
-                    'sync': True,
                 },
             },
             user=owner,
@@ -115,7 +114,6 @@ class EnableDisableMutationsTestCase(SWTestCase):
                 'input': {
                     'clientMutationId': '12345',
                     'accountId': node_id_from_instance(account_2),
-                    'sync': True,
                 },
             },
             user=owner,

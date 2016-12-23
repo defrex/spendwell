@@ -30,7 +30,6 @@ class DisableAccountMutation(graphene.relay.ClientIDMutation):
 class EnableAccountMutation(graphene.relay.ClientIDMutation):
     class Input:
         account_id = graphene.ID()
-        sync = graphene.Boolean()
 
     account = graphene.Field(AccountNode)
 
@@ -38,7 +37,7 @@ class EnableAccountMutation(graphene.relay.ClientIDMutation):
     @with_context
     def mutate_and_get_payload(cls, input, context, info):
         account = instance_for_node_id(input.get('account_id'), context, info)
-        account.enable(input.get('sync', True))
+        account.enable()
         return EnableAccountMutation(account=account)
 
 

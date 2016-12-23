@@ -5,52 +5,7 @@ from apps.core.models import SWModel, SWManager
 
 
 class AccountManager(SWManager):
-    def from_plaid(self, institution, data):
-        try:
-            account = Account.objects.get(
-                owner=institution.owner,
-                institution=institution,
-                plaid_id=data['_id'],
-            )
-        except Account.DoesNotExist:
-            account = Account()
-            account.owner = institution.owner
-            account.institution = institution
-            account.plaid_id = data['_id']
-
-        account.type = data['type']
-        account.subtype = data.get('subtype')
-        account.name = data['meta']['name']
-        account.number_snippet = data['meta']['number']
-
-        if account.type == 'credit':
-            account.current_balance = -(data['balance']['current'] or 0)
-        else:
-            account.current_balance = data['balance']['current']
-
-        account.save()
-        return account
-
-    def from_finicity(self, institution, data):
-        try:
-            account = Account.objects.get(
-                owner=institution.owner,
-                institution=institution,
-                finicity_id=data['id'],
-            )
-        except Account.DoesNotExist:
-            account = Account()
-            account.owner = institution.owner
-            account.institution = institution
-            account.finicity_id = data['id']
-
-        account.type = data['type']
-        account.name = data['name']
-        account.number_snippet = data['number']
-        account.current_balance = data.get('balance')
-
-        account.save()
-        return account
+    pass
 
 
 class Account(SWModel):
@@ -101,9 +56,6 @@ class Account(SWModel):
         if detect_transfers:
             detect_transfers_task.delay(self.owner.id)
 
-    def enable(self, sync=True):
+    def enable(self):
         self.disabled = False
         self.save()
-
-        if sync:
-            self.institution.sync()

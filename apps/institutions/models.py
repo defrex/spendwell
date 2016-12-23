@@ -1,57 +1,14 @@
 
 import logging
-from base64 import b64decode
-
-from django.core.files.base import ContentFile
-from django.dispatch import receiver
 from django.db import models
-from django.conf import settings
-from django.utils import timezone
-from plaid import Client
-from plaid.errors import ResourceNotFoundError, RequestFailedError
-
-from spendwell.mixpanel import mixpanel
 from apps.core.models import SWModel, SWManager
-from apps.core.signals import day_start
-from apps.accounts.models import Account
-from apps.transactions.models import Transaction
-from apps.finicity.client import Finicity, FinicityError
-
-from .utils import sync_all
 
 
 logger = logging.getLogger(__name__)
 
 
 class InstitutionManager(SWManager):
-    def from_plaid(self, owner, plaid_id, plaid_access_token, plaid_public_token, data, logo_data):
-        institution, created = Institution.objects.get_or_create(
-            owner=owner,
-            plaid_id=plaid_id,
-            defaults={'name': data['name']},
-        )
-
-        institution.plaid_public_token = plaid_public_token
-        institution.plaid_access_token = plaid_access_token
-
-        if logo_data:
-            institution.logo = ContentFile(b64decode(logo_data), 'logo.png')
-
-        institution.save()
-        return institution
-
-    def from_finicity(self, owner, data):
-        try:
-            logo = InstitutionTemplate.objects.get(finicity_id=data['id']).image
-        except InstitutionTemplate.DoesNotExist:
-            logo = None
-
-        institution, created = Institution.objects.get_or_create(
-            owner=owner,
-            finicity_id=data['id'],
-            defaults={'name': data['name'], 'logo': logo},
-        )
-        return institution
+    pass
 
 
 class Institution(SWModel):
@@ -97,48 +54,6 @@ class Institution(SWModel):
         return self._institution_template
 
     @property
-    def plaid_client(self):
-        if self.upload_only or not self.plaid_id or not self.plaid_access_token:
-            return
-
-        if not hasattr(self, '_plaid_client'):
-            self._plaid_client = Client(
-                client_id=settings.PLAID_CLIENT_ID,
-                secret=settings.PLAID_SECRET,
-                access_token=self.plaid_access_token,
-            )
-        return self._plaid_client
-
-    @property
-    def plaid_data(self):
-        if not hasattr(self, '_plaid_data'):
-            if self.plaid_client:
-                self._plaid_data = None
-                return
-
-            try:
-                self._plaid_data = self.plaid_client.connect_get().json()
-
-            except ResourceNotFoundError:
-                self._plaid_data = None
-
-            except RequestFailedError:
-                self._plaid_data = None
-                self.reauth_required = True
-                self.save()
-
-        return self._plaid_data
-
-    @property
-    def finicity_client(self):
-        if not self.finicity_id or self.upload_only:
-            return
-
-        if not hasattr(self, '_finicity_client'):
-            self._finicity_client = Finicity(user=self.owner)
-        return self._finicity_client
-
-    @property
     def current_balance(self):
         return (
             self.accounts
@@ -146,93 +61,6 @@ class Institution(SWModel):
             .aggregate(models.Sum('current_balance'))
             ['current_balance__sum']
         ) or 0
-
-    def sync_accounts(self):
-        if self.plaid_client and self.plaid_data:
-            for account_data in self.plaid_data['accounts']:
-                Account.objects.from_plaid(self, account_data)
-
-        elif self.finicity_client:
-            try:
-                accounts_data = self.finicity_client.list_accounts(self.finicity_id)
-            except FinicityError:
-                self.reauth_required = True
-                self.save()
-                raise
-
-            for account_data in accounts_data:
-                Account.objects.from_finicity(self, account_data)
-
-    def sync_transactions(self, delete_duplicates=False):
-        if self.upload_only:
-            return
-
-        new_transactions = []
-
-        if self.plaid_client and self.plaid_data:
-            for transaction_data in self.plaid_data['transactions']:
-                new_transactions.append(Transaction.objects.from_plaid(self, transaction_data))
-
-        elif self.finicity_client:
-            try:
-                transactions_data = self.finicity_client.list_transactions(self.finicity_id)
-            except FinicityError:
-                self.reauth_required = True
-                self.save()
-                raise
-
-            for transaction_data in transactions_data:
-                new_transactions.append(Transaction.objects.from_finicity(self, transaction_data))
-
-        new_transactions = [t for t in new_transactions if t is not None]
-        if not len(new_transactions):
-            return
-
-        duplicate_transactions = Transaction.objects.filter(
-            account__institution=self,
-            date__gte=new_transactions[0].date,
-            date__lte=new_transactions[-1].date,
-        ).exclude(
-            id__in=[t.id for t in new_transactions],
-        )
-
-        if duplicate_transactions.count():
-            logger.error('Suspected duplicate transactions for user', extra={
-                'user_id': self.owner.id,
-                'institution_id': self.id,
-                'synced_transactions': len(new_transactions),
-                'duplicate_transactions': duplicate_transactions.count(),
-            })
-            if delete_duplicates:
-                duplicate_transactions.delete()
-
-    def sync(self, delete_duplicates=False):
-        if self.upload_only:
-            return
-
-        self.sync_accounts()
-        self.sync_transactions(delete_duplicates=delete_duplicates)
-        self.last_sync = timezone.now()
-        self.reauth_required = False
-        self.save()
-
-        if self.finicity_id:
-            provider = 'finicty'
-        elif self.finicity_id:
-            provider = 'plaid'
-        else:
-            provider = 'other'
-
-        mixpanel.track(self.owner.id, 'sync', {
-            'provider': provider,
-            'accounts': self.accounts.count(),
-            'transactions': sum([a.transactions.count() for a in self.accounts.all()]),
-        })
-
-
-@receiver(day_start)
-def on_day_start(*args, **kwargs):
-    sync_all()
 
 
 class InstitutionTemplate(models.Model):

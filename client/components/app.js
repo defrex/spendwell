@@ -15,7 +15,7 @@ import style from 'sass/components/app'
 class App extends Component {
   static propTypes = {
     viewer: PropTypes.object,
-    children: PropTypes.array,
+    children: PropTypes.oneOfType([PropTypes.array, PropTypes.object]),
     toasts: PropTypes.array,
     loading: PropTypes.number.isRequired,
     chatlioOpen: PropTypes.bool.isRequired,

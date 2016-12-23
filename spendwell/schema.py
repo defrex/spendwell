@@ -11,7 +11,6 @@ from apps.users.schema import UsersQuery
 from apps.users.mutations import UsersMutations
 from apps.buckets.schema import BucketsQuery
 from apps.buckets.mutations import BucketsMutations
-from apps.finicity.mutations import FinicityMutations
 
 
 class Viewer(
@@ -49,7 +48,6 @@ class Mutations(
     TransactionsMutations,
     BucketsMutations,
     UsersMutations,
-    FinicityMutations,
 ):
     pass
 
