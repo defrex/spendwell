@@ -14,12 +14,12 @@ import style from 'sass/components/app'
 
 class App extends Component {
   static propTypes = {
-    viewer: PropTypes.object,
-    children: PropTypes.oneOfType([PropTypes.array, PropTypes.object]),
-    toasts: PropTypes.array,
+    viewer: PropTypes.object.isRequired,
+    children: PropTypes.oneOfType([PropTypes.array, PropTypes.object]).isRequired,
+    toasts: PropTypes.array.isRequired,
     loading: PropTypes.number.isRequired,
     chatlioOpen: PropTypes.bool.isRequired,
-    onForceFetch: PropTypes.func,
+    onForceFetch: PropTypes.func.isRequired,
     title: PropTypes.string,
     onOverlayClose: PropTypes.func,
     back: PropTypes.bool,
@@ -46,13 +46,7 @@ class App extends Component {
   }
 
   handleForceFetch () {
-    const { onForceFetch } = this.props
-
-    if (onForceFetch) {
-      onForceFetch()
-    } else {
-      console.warn('Unhandled forceFetch event')
-    }
+    this.props.onForceFetch()
   }
 
   toggleNav () {

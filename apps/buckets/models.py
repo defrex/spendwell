@@ -97,19 +97,11 @@ class Bucket(SWModel):
             TransactionFilter,
         )
 
-    def assign_transactions(self, unassigned_only=True):
+    def assign_transactions(self):
         BucketTransaction.objects.filter(bucket=self).delete()
 
         if self.filters is None:
             return
 
-        transactions = self.raw_transactions()
-
-        if unassigned_only:
-            transactions = transactions.filter(assigned=False)
-
-        for transaction_id in transactions.values_list('id', flat=True):
+        for transaction_id in self.raw_transactions().values_list('id', flat=True):
             BucketTransaction.objects.get_or_create(bucket=self, transaction_id=transaction_id)
-
-        if unassigned_only:
-            self.raw_transactions().update(assigned=True)

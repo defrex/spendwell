@@ -63,7 +63,7 @@ class CreateBucketMutation(graphene.relay.ClientIDMutation):
             use_fixed_amount=input.get('use_fixed_amount', bool(input.get('fixed_amount'))),
         )
 
-        bucket.assign_transactions(unassigned_only=False)
+        bucket.assign_transactions()
 
         return Cls(viewer=Viewer())
 
@@ -104,7 +104,7 @@ class UpdateBucketMutation(graphene.relay.ClientIDMutation):
 
         bucket.save()
 
-        bucket.assign_transactions(unassigned_only=False)
+        bucket.assign_transactions()
 
         return Cls(bucket=bucket, viewer=Viewer())
 

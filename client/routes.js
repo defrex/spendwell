@@ -11,9 +11,9 @@ import useRelay from 'react-router-relay'
 
 import Dashboard from 'views/dashboard'
 import Accounts from 'views/accounts'
-import AccountUpload from 'views/account-upload'
 import Bucket from 'views/bucket'
 import Transactions from 'views/transactions'
+import UploadCSV from 'views/upload-csv'
 
 import track from 'utils/track'
 
@@ -52,9 +52,9 @@ export default (
       <Route path='labels/:id' component={Bucket} {...viewKwargs}/>
 
       <Route path='accounts' component={Accounts} {...viewKwargs}/>
-      <Route path='accounts/:id/upload' component={AccountUpload} {...viewKwargs}/>
 
       <Route path='transactions' component={Transactions} {...viewKwargs}/>
+      <Route path='transactions/upload' component={UploadCSV} {...viewKwargs}/>
     </Route>
   </Router>
 )

@@ -39,7 +39,6 @@ class AccountUpload extends Component {
           handleMutationError(response)
         },
         onSuccess: () => {
-          console.log('Success: CreateBucketMutation')
           this.setState({ loading: false })
           sendToast('CSV uploaded successfully')
         },

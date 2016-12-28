@@ -164,3 +164,38 @@ export class AutodetectBillsMutation extends Relay.Mutation {
     }]
   }
 }
+
+export class AssignTransactionsMutation extends Relay.Mutation {
+  static fragments = {
+    viewer: () => Relay.QL`
+      fragment on Viewer {
+        id
+      }
+    `,
+  };
+
+  getMutation () {
+    return Relay.QL`mutation { assignTransactions }`
+  }
+
+  getVariables () {
+    return {}
+  }
+
+  getFatQuery () {
+    return Relay.QL`
+      fragment on AssignTransactionsMutationPayload {
+        viewer { dummy }
+      }
+    `
+  }
+
+  getConfigs () {
+    return [{
+      type: 'FIELDS_CHANGE',
+      fieldIDs: {
+        viewer: this.props.viewer.id,
+      },
+    }]
+  }
+}

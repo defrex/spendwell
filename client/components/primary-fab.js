@@ -10,7 +10,6 @@ import supportsTrueHover from 'utils/supports-true-hover'
 
 import styles from 'sass/components/primary-fab.scss'
 
-
 class PrimaryFab extends Component {
   static propTypes = {
     actions: PropTypes.arrayOf(PropTypes.shape({
@@ -37,11 +36,13 @@ class PrimaryFab extends Component {
   handleClick (defaultAction) {
     const { open } = this.state
 
-    if (!supportsTrueHover())
+    if (!supportsTrueHover()) {
       this.setState({ open: !open })
+    }
 
-    if (open || supportsTrueHover())
+    if (open || supportsTrueHover()) {
       defaultAction()
+    }
   }
 
   render () {
@@ -92,7 +93,6 @@ class PrimaryFab extends Component {
     )
   }
 }
-
 
 PrimaryFab = connect((state) => ({
   chatlioOpen: state.chatlioOpen,

@@ -7,7 +7,7 @@ import Icon from 'components/icon'
 import style from 'sass/components/nav'
 
 import { handleMutationError } from 'utils/network-layer'
-import { AutodetectBillsMutation } from 'mutations/buckets'
+import { AutodetectBillsMutation, AssignTransactionsMutation } from 'mutations/buckets'
 import eventEmitter from 'utils/event-emitter'
 
 import logoGreen from 'img/logo-green.svg'
@@ -62,20 +62,29 @@ class Nav extends Component {
               <div className='label'>Logout</div>
             </a>
           </li>
-          {viewer.isAdmin ? <li className='divider'/> : null}
-          {viewer.isAdmin ? (
-            <li>
-              <A onClick={() => {
-                Relay.Store.commitUpdate(new AutodetectBillsMutation({ viewer }), {
-                  onFailure: handleMutationError,
-                  onSuccess: () => eventEmitter.emit('forceFetch'),
-                })
-              }}>
-                <Icon type='find replace'/>
-                <div className='label'>Autodetect Bills</div>
-              </A>
-            </li>
-          ) : null}
+          <li className='divider'/>
+          <li>
+            <A onClick={() => {
+              Relay.Store.commitUpdate(new AutodetectBillsMutation({ viewer }), {
+                onFailure: handleMutationError,
+                onSuccess: () => eventEmitter.emit('forceFetch'),
+              })
+            }}>
+              <Icon type='find replace'/>
+              <div className='label'>Autodetect Bills</div>
+            </A>
+          </li>
+          <li>
+            <A onClick={() => {
+              Relay.Store.commitUpdate(new AssignTransactionsMutation({ viewer }), {
+                onFailure: handleMutationError,
+                onSuccess: () => eventEmitter.emit('forceFetch'),
+              })
+            }}>
+              <Icon type='move to inbox'/>
+              <div className='label'>Assign Transactions</div>
+            </A>
+          </li>
         </ul>
       </div>
     )
@@ -88,6 +97,7 @@ Nav = Relay.createContainer(Nav, {
       return Relay.QL`
         fragment on Viewer {
           ${AutodetectBillsMutation.getFragment('viewer')}
+          ${AssignTransactionsMutation.getFragment('viewer')}
 
           email
           isAdmin
