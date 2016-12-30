@@ -74,13 +74,6 @@ class AppView(ClientView):
 app_view = login_required(ensure_csrf_cookie(AppView.as_view()))
 
 
-class CalculatorsView(TemplateView):
-    template_name = 'core/calculators.html'
-
-
-calculators_view = CalculatorsView.as_view()
-
-
 class ManifestView(TemplateView):
     template_name = 'manifest.json'
     content_type = 'application/json'
