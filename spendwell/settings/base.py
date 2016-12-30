@@ -46,7 +46,6 @@ INSTALLED_APPS = [
     'apps.institutions',
     'apps.accounts',
     'apps.transactions',
-    'apps.categories',
     'apps.buckets',
 
     # temp
