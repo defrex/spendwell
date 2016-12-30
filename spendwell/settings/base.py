@@ -48,8 +48,6 @@ INSTALLED_APPS = [
     'apps.transactions',
     'apps.categories',
     'apps.buckets',
-    'apps.blog',
-    'apps.ads',
 
     # temp
     'apps.goals',

@@ -6,42 +6,21 @@ body.landing {
     padding: 13px 0 10px;
     background-color: color('grey', '100');
 
-    .col-sm-6:first-child {
-      text-align: left;
-
-      a {
-        padding-top: 3px;
-      }
-    }
-
-    .col-sm-6:last-child {
-      text-align: right;
-    }
-
-    .list-inline {
+    .nav {
+      float: right;
       margin-bottom: 0;
-    }
 
-    img {
-      height: 40px;
-    }
-
-    a:not(.mui-btn) {
-      color: color('grey', '700');
+      a:not(.mui-btn) {
+        color: color('grey', '700');
+      }
     }
 
     .logo {
-      margin-right: 10px;
+      display: block;
+      float: left;
 
       img {
-        @media (min-width: $screen-sm-min) {
-          margin-top: -3px;
-        }
-      }
-
-      @media (max-width: $screen-xs-max) {
-        width: 100%;
-        text-align: center;
+        height: 40px;
       }
     }
   }
@@ -52,50 +31,5 @@ body.landing {
     background-color: $primary;
     text-align: center;
     color: white;
-  }
-
-  footer {
-    padding: 60px 0;
-    background-color: color('grey', '800');
-    color: color('grey', '50');
-
-    ul {
-      margin-bottom: 0;
-    }
-
-    a {
-      color: color('grey', '50');
-
-      .fa {
-        font-size: 20px;
-        color: $primary;
-      }
-    }
-
-    .right {
-      color: color('grey', '500');
-    }
-
-    @media (max-width: $screen-xs-max) {
-      text-align: center;
-
-      .col {
-        margin-bottom: 20px;
-      }
-    }
-
-    @media (min-width: $screen-sm-min) {
-      .left {
-        text-align: left;
-      }
-
-      .center {
-        text-align: center;
-      }
-
-      .right {
-        text-align: right;
-      }
-    }
   }
 }

@@ -18,99 +18,22 @@
 {% block body %}
   <div class="header">
     <div class="container">
-      <div class="row">
-        <div class="col-sm-8 hidden-xs">
-          <ul class="list-inline nav-dropdown">
-            <li class="logo"><a href="{% url 'landing:home' %}">
-              <img src="{% static 'img/landing/logo.svg' %}" alt="Spendwell"/>
-            </a></li>
-            <li><a href="{% url 'landing:home' %}#security">Security</a></li>
-            <li><a href="{% url 'landing:faq' %}">FAQ</a></li>
-            <li><a href="{% url 'calculators' %}">Calculators</a></li>
-            <li><a href="{% url 'blog:entry_list' %}">Blog</a></li>
-          </ul>
-        </div>
-        <div class="col-sm-4 hidden-xs">
-          {% if request.user.is_authenticated %}
-            <ul class="list-inline">
-              <li><a href="{% url 'logout' %}?next=/">Logout</a></li>
-              <li><a href="{% url 'app' %}" class="mui-btn mui-btn--primary">Dashboard</a></li>
-            </ul>
-          {% else %}
-            <ul class="list-inline">
-              <li><a href="{% url 'login' %}">Login</a></li>
-              <li><a href="javascript:;" class="mui-btn mui-btn--primary landing-cta">Signup</a></li>
-            </ul>
-          {% endif %}
-        </div>
+      <a href="{% url 'landing:home' %}" class="logo">
+        <img src="{% static 'img/landing/logo.svg' %}" alt="Spendwell"/>
+      </a>
 
-        <div class="col-sm-12 visible-xs">
-          <a href="{% url 'landing:home' %}">
-            <img src="{% static 'img/landing/logo.svg' %}" alt="Spendwell"/>
-          </a>
-
-          <div class="mui-dropdown">
-            <button class="mui-btn mui-btn--default mui-btn--flat">
-              <i class="material-icons">more_vert</i>
-            </button>
-            <ul class="mui-dropdown__menu mui-dropdown__menu--right">
-              {% if request.user.is_authenticated %}
-                <li><a href="{% url 'app' %}">Dashboard</a></li>
-              {% endif %}
-              <li><a href="{% url 'landing:home' %}#security">Security</a></li>
-              <li><a href="{% url 'landing:faq' %}">FAQ</a></li>
-              <li><a href="{% url 'calculators' %}">Calculators</a></li>
-              <li><a href="{% url 'blog:entry_list' %}">Blog</a></li>
-              {% if request.user.is_authenticated %}
-                <li><a href="{% url 'logout' %}?next=/">Logout</a></li>
-              {% else %}
-                <li><a href="{% url 'login' %}">Login</a></li>
-              {% endif %}
-            </ul>
-          </div>
-        </div>
-
-      </div>
+      <ul class="nav list-inline">
+        {% if request.user.is_authenticated %}
+          <li><a href="{% url 'logout' %}?next=/">Logout</a></li>
+          <li><a href="{% url 'app' %}" class="mui-btn mui-btn--primary">Dashboard</a></li>
+        {% else %}
+          <li><a href="{% url 'login' %}">Login</a></li>
+        {% endif %}
+      </ul>
     </div>
   </div>
 
   {% block content %}{% endblock %}
-
-  <footer>
-    <div class="container">
-      <div class="row">
-        <div class="col-sm-3 col left">
-          <ul class="list-inline">
-            <li><a href="https://www.facebook.com/SpendwellApp">
-              <i class="fa fa-facebook"></i>
-            </a></li>
-            <li><a href="https://twitter.com/spendwellapp">
-              <i class="fa fa-twitter"></i>
-            </a></li>
-          </ul>
-        </div>
-        <div class="col-sm-6 col center">
-          <ul class="list-inline">
-            <li><a href="{% url 'landing:home' %}#security">Security</a></li>
-            <li><a href="{% url 'landing:faq' %}">FAQ</a></li>
-            <li><a href="{% url 'calculators' %}">Calculators</a></li>
-            <li><a href="{% url 'blog:entry_list' %}">Blog</a></li>
-            {% if request.user.is_authenticated %}
-              <li><a href="{% url 'logout' %}?next=/">Logout</a></li>
-            {% else %}
-              <li><a href="{% url 'login' %}">Login</a></li>
-              <li><a href="{% url 'signup' %}">Signup</a></li>
-            {% endif %}
-          </ul>
-        </div>
-        <div class="col-sm-3 col right">
-          &copy;{{ copyright_year }} Spendwell Inc.
-        </div>
-      </div>
-    </div>
-  </footer>
-
-  {% include 'landing/_email-form.html' %}
 
   <script src="{% static 'dist/pages.js' %}"></script>
 {% endblock %}
