@@ -2,16 +2,7 @@
 import raven
 
 from .base import *
-from .secrets import (
-    db_password,
-    plaid_secret,
-    finicity_secret,
-    raven_dsn,
-    twitter_consumer_secret,
-    twitter_access_token_secret,
-    mailgun_smtp_password,
-    charturl_api_key,
-)
+from .secrets import db_password, raven_dsn, mailgun_smtp_password
 
 
 SITE_DOMAIN = 'www.spendwell.co'
@@ -52,21 +43,10 @@ RAVEN_CONFIG = {
     'release': raven.fetch_git_sha(BASE_DIR),
 }
 
-PLAID_PRODUCTION = True
-PLAID_SECRET = plaid_secret
-
-FINICITY_ENABLED = True
-FINICITY_PRODUCTION = True
-FINICITY_ID = '2445581415347'
-FINICITY_SECRET = finicity_secret
-FINICITY_APP_KEY = 'e152b1e1dc39cd13969ffc7dc954bb88'
-
 INCLUDE_ANALYTICS = True
 MIXPANEL_PUBLIC_KEY = '25e4cbc88d444229cfcddfe21935ed2c'
 GOOGLE_ANALYTICS_KEY = 'UA-71571230-1'
 FACEBOOK_PIXEL_KEY = '227041677640062'
 
-TWITTER_CONSUMER_SECRET = twitter_consumer_secret
-TWITTER_ACCESS_TOKEN_SECRET = twitter_access_token_secret
-
-CHARTURL_API_KEY = charturl_api_key
+# Needed for weekly email
+CHARTURL_API_KEY = None
