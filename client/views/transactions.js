@@ -2,6 +2,7 @@
 import { Component, PropTypes } from 'react'
 import Relay from 'react-relay'
 import moment from 'moment'
+import { browserHistory } from 'react-router'
 
 import CardList from 'components/card-list'
 import Button from 'components/button'
@@ -9,6 +10,8 @@ import TransactionList from 'components/transaction-list'
 import ScrollTrigger from 'components/scroll-trigger'
 import App from 'components/app'
 import MonthSelector from 'components/month-selector'
+import PrimaryFab from 'components/primary-fab'
+import Icon from 'components/icon'
 
 import styles from 'sass/views/dashboard.scss'
 
@@ -66,6 +69,13 @@ class Dashboard extends Component {
             : null}
           </CardList>
         </ScrollTrigger>
+
+        <PrimaryFab actions={[{
+          default: true,
+          label: 'Upload',
+          icon: <Icon type='backup' color='light'/>,
+          onClick: () => browserHistory.push({ pathname: '/app/transactions/upload' }),
+        }]}/>
       </App>
     )
   }

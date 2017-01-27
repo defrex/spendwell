@@ -11,7 +11,6 @@ import DialogActions from 'components/dialog-actions'
 
 import { SetIncomeFromSavingsMutation } from 'mutations/transactions'
 
-
 class IncomeFromSavingsDialog extends Component {
   static propTypes = {
     onRequestClose: PropTypes.func.isRequired,

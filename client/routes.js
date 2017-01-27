@@ -11,13 +11,9 @@ import useRelay from 'react-router-relay'
 
 import Dashboard from 'views/dashboard'
 import Accounts from 'views/accounts'
-import AddAccount from 'views/add-account'
-import AccountUpload from 'views/account-upload'
 import Bucket from 'views/bucket'
 import Transactions from 'views/transactions'
-import OnboardingAddAccount from 'views/onboarding/add-account'
-import OnboardingAccounts from 'views/onboarding/accounts'
-import OnboardingWalkthrough from 'views/onboarding/walkthrough'
+import UploadCSV from 'views/upload-csv'
 
 import track from 'utils/track'
 
@@ -47,14 +43,6 @@ export default (
     render={applyRouterMiddleware(useRelay)}
     environment={Relay.Store}
   >
-    <Route path='onboarding'>
-      <IndexRedirect to='connect'/>
-
-      <Route path='connect' component={OnboardingAddAccount} {...viewKwargs}/>
-      <Route path='accounts' component={OnboardingAccounts} {...viewKwargs}/>
-      <Route path='walkthrough' component={OnboardingWalkthrough} {...viewKwargs}/>
-    </Route>
-
     <Route path='app'>
       <IndexRedirect to='dashboard'/>
 
@@ -64,10 +52,9 @@ export default (
       <Route path='labels/:id' component={Bucket} {...viewKwargs}/>
 
       <Route path='accounts' component={Accounts} {...viewKwargs}/>
-      <Route path='accounts/new' component={AddAccount} {...viewKwargs}/>
-      <Route path='accounts/:id/upload' component={AccountUpload} {...viewKwargs}/>
 
       <Route path='transactions' component={Transactions} {...viewKwargs}/>
+      <Route path='transactions/upload' component={UploadCSV} {...viewKwargs}/>
     </Route>
   </Router>
 )

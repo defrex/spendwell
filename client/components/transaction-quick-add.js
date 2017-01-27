@@ -10,7 +10,6 @@ import TextInput from 'components/text-input'
 import Transition from 'components/transition'
 import CreateBucketSheet from 'components/create-bucket-sheet'
 
-import track from 'utils/track'
 import eventEmitter from 'utils/event-emitter'
 import { TransactionQuickAddMutation } from 'mutations/transactions'
 
@@ -19,12 +18,15 @@ import styles from 'sass/components/transaction-quick-add'
 
 class TransactionQuickAdd extends Component {
   static propTypes = {
+    relay: PropTypes.object.isRequired,
+    viewer: PropTypes.object.isRequired,
+    transaction: PropTypes.object.isRequired,
     onRemove: PropTypes.func.isRequired,
   };
 
   state = {
     loading: false,
-    createBucketType: null,
+    createBucketType: 'expense',
     createBucket: false,
   };
 
@@ -37,8 +39,6 @@ class TransactionQuickAdd extends Component {
         handleMutationError(response)
       },
       onSuccess: (response) => {
-        console.log('Success: TransactionQuickAddMutation')
-
         this.setState({ loading: false, searchValue: '' })
         relay.setVariables({ searchValue: '' })
 
@@ -61,13 +61,10 @@ class TransactionQuickAdd extends Component {
         handleMutationError(response)
       },
       onSuccess: () => {
-        console.log('Success: TransactionQuickAddMutation')
-
-        this.setState({ loading: false, searchValue: '' })
         relay.setVariables({ searchValue: '' })
+        this.setState({ loading: false, searchValue: '' })
 
         eventEmitter.emit('forceFetch')
-        track('quick-add', { create: false })
       },
     })
   }
@@ -82,15 +79,15 @@ class TransactionQuickAdd extends Component {
   handleCreateComplete () {
     const { relay } = this.props
 
-    this.setState({ searchValue: '' })
+    // this.setState({ searchValue: '' })
     relay.setVariables({ searchValue: '' })
     eventEmitter.emit('forceFetch')
-    track('quick-add', { create: true })
   }
 
   render () {
-    const { viewer, transaction, onRemove } = this.props
-    const { focus, searchValue, createBucketType, createBucket } = this.state
+    const { viewer, transaction, onRemove, relay } = this.props
+    const { focus, createBucketType, createBucket } = this.state
+    const { searchValue } = relay.variables
 
     return (
       <div className={`transaction-quick-add ${styles.root}`}>
@@ -148,12 +145,12 @@ class TransactionQuickAdd extends Component {
 
 TransactionQuickAdd = Relay.createContainer(TransactionQuickAdd, {
   initialVariables: {
-    open: false,
+    search: false,
     searchValue: '',
   },
   prepareVariables: (vars) => ({
-    search: !!vars.searchValue,
     ...vars,
+    search: !!vars.searchValue,
   }),
   fragments: {
     viewer: () => Relay.QL`

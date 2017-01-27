@@ -22,6 +22,9 @@ import styles from 'sass/components/list-transaction'
 
 class ListTransaction extends Component {
   static propTypes = {
+    viewer: PropTypes.object.isRequired,
+    transaction: PropTypes.object.isRequired,
+    relay: PropTypes.object.isRequired,
     abs: PropTypes.bool.isRequired,
     months: PropTypes.bool.isRequired,
     expanded: PropTypes.bool,
@@ -39,8 +42,9 @@ class ListTransaction extends Component {
   };
 
   componentWillReceiveProps (nextProps) {
-    if (nextProps.expanded !== this.props.expanded)
+    if (nextProps.expanded !== this.props.expanded) {
       this.props.relay.setVariables({ open: nextProps.expanded })
+    }
   }
 
   handleDelete () {
@@ -53,7 +57,6 @@ class ListTransaction extends Component {
         handleMutationError(response)
       },
       onSuccess: () => {
-        console.log('Success: DeleteTransactionMutation')
         this.setState({ loading: false })
         relay.forceFetch()
       },

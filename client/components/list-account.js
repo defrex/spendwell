@@ -10,7 +10,7 @@ import TransactionList from 'components/transaction-list'
 import CardActions from 'components/card-actions'
 
 
-export default class ListAccount extends Component {
+class ListAccount extends Component {
   static propTypes = {
     onDisable: PropTypes.func.isRequired,
     onClick: PropTypes.func,
@@ -22,8 +22,9 @@ export default class ListAccount extends Component {
   };
 
   componentWillReceiveProps (nextProps) {
-    if (nextProps.expanded !== this.props.expanded)
+    if (nextProps.expanded !== this.props.expanded) {
       this.props.relay.setVariables({ open: nextProps.expanded })
+    }
   }
 
   loadTransactions () {
@@ -54,7 +55,6 @@ export default class ListAccount extends Component {
           }>
             <CardActions>
               <Button onClick={onDisable} color='accent' flat>Disable</Button>
-              <Button to={`/app/accounts/${account.id}/upload`} color='accent' flat>Upload CSV</Button>
             </CardActions>
           </Card>
         }

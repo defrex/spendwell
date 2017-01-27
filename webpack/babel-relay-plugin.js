@@ -1,8 +1,8 @@
 /*eslint no-var: 0*/
 
-var babelRelayPlugin = require('babel-relay-plugin');
-var childProcess = require('child_process');
+var babelRelayPlugin = require('babel-relay-plugin')
+var childProcess = require('child_process')
 
-var schema = JSON.parse(childProcess.execSync('$VIRTUAL_ENV/bin/python ./manage.py export_schema'));
+var schema = JSON.parse(childProcess.execSync('/usr/local/bin/python ./manage.py export_schema'))
 
-module.exports = babelRelayPlugin(schema);
+module.exports = babelRelayPlugin(schema)

@@ -63,6 +63,13 @@ class TransactionNode(SWNode):
 class TransactionsQuery(graphene.ObjectType):
     transaction = graphene.relay.NodeField(TransactionNode)
     transactions = TransactionConnectionField(TransactionNode)
+    last_transaction_date = graphene.Field(graphene.String())
+
+    @with_context
+    def resolve_last_transaction_date(self, args, context, info):
+        transactions = Transaction.objects.filter(owner=context.user).order_by('-date')
+        if len(transactions) > 0:
+            return transactions[0].date.strftime('%Y-%m-%dT%H:%M:%S.%f')
 
     class Meta:
         abstract = True

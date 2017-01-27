@@ -2,7 +2,7 @@ https://dev.spendwell.co
 
 log / stdout "{status} {method} {path}"
 
-tls local/dev_spendwell_co.crt local/dev_spendwell_co.key
+tls local/cert/dev_spendwell_co.crt local/cert/dev_spendwell_co.key
 
 proxy / localhost:3000 {
     websocket
@@ -10,7 +10,3 @@ proxy / localhost:3000 {
     proxy_header X-Forwarded-Host dev.spendwell.co
     proxy_header X-Forwarded-Proto https
 }
-
-startup node ./webpack/dev.server.js &
-startup ./manage.py runserver &
-startup celery -A spendwell worker -l info &

@@ -1,5 +1,5 @@
 
-import { Component } from 'react'
+import { Component, PropTypes } from 'react'
 import Relay from 'react-relay'
 
 import App from 'components/app'
@@ -16,8 +16,11 @@ import { UploadCsvMutation } from 'mutations/transactions'
 
 import styles from 'sass/views/account-upload.scss'
 
-
 class AccountUpload extends Component {
+  static propTypes = {
+    viewer: PropTypes.object.isRequired,
+  };
+
   state = { loading: false };
 
   handleFileUpload (event) {
@@ -36,7 +39,6 @@ class AccountUpload extends Component {
           handleMutationError(response)
         },
         onSuccess: () => {
-          console.log('Success: CreateBucketMutation')
           this.setState({ loading: false })
           sendToast('CSV uploaded successfully')
         },
@@ -78,7 +80,6 @@ class AccountUpload extends Component {
     )
   }
 }
-
 
 AccountUpload = Relay.createContainer(AccountUpload, {
   initialVariables: { id: null },

@@ -1,0 +1,58 @@
+version: '2'
+
+services:
+
+  postgres:
+    image: postgres:9.6
+    volumes:
+      - postgresql_data:/var/lib/postgresql/data
+    ports:
+      - '5432:5432'
+    environment:
+      - POSTGRES_PASSWORD=dbpass
+
+  redis:
+    image: redis:2.8.23
+    volumes:
+      - redis_data:/var/lib/redis/data
+
+  celery:
+    build: .
+    command: celery -A spendwell worker -l info
+    links:
+      - postgres
+      - redis
+    environment:
+      - C_FORCE_ROOT=1
+    volumes:
+      - ./:/var/www
+
+  app:
+    build: .
+    command: python ./manage.py runserver 0.0.0.0:8000
+    links:
+      - postgres
+      - redis
+      - celery
+    ports:
+      - '8000:8000'
+    expose:
+      - '8000'
+    volumes:
+      - ./:/var/www
+
+  webpack:
+    build: .
+    command: node ./webpack/dev.server.js
+    links:
+      - app
+    ports:
+      - '3000:3000'
+    expose:
+      - '3000'
+    volumes:
+      - ./:/var/www
+
+volumes:
+  postgresql_data:
+  redis_data:

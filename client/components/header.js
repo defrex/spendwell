@@ -2,17 +2,15 @@
 import { PropTypes, Component } from 'react'
 import Relay from 'react-relay'
 import { browserHistory } from 'react-router'
+import moment from 'moment'
 
-import OnboardProgress from 'components/onboard-progress'
 import Icon from 'components/icon'
-import A from 'components/a'
 
-import store from 'store'
 import style from 'sass/components/header'
-
 
 class Header extends Component {
   static propTypes = {
+    viewer: PropTypes.object,
     title: PropTypes.string,
     toggleNav: PropTypes.func,
     plain: PropTypes.bool,
@@ -28,8 +26,9 @@ class Header extends Component {
 
   handleHandleClick (event) {
     event.preventDefault()
-    if (this.props.toggleNav)
+    if (this.props.toggleNav) {
       this.props.toggleNav()
+    }
   }
 
   handleBackClick (event) {
@@ -38,7 +37,7 @@ class Header extends Component {
   }
 
   render () {
-    const { viewer, back, plain, title, chatlioOpen } = this.props
+    const { back, plain, title, viewer } = this.props
 
     return (
       <nav className={`mui-appbar ${style.root}`}>
@@ -58,7 +57,13 @@ class Header extends Component {
 
         <div className='title'>{title}</div>
 
-        {!plain ? <OnboardProgress viewer={viewer}/> : null}
+        <div
+          className='updated-date'
+          onClick={() => browserHistory.push({ pathname: '/app/transactions/upload' })}
+        >
+          <small>Most Recent</small>
+          <strong>{moment(viewer.lastTransactionDate).fromNow()}</strong>
+        </div>
       </nav>
     )
   }
@@ -68,9 +73,7 @@ Header = Relay.createContainer(Header, {
   fragments: {
     viewer: () => Relay.QL`
       fragment on Viewer {
-        ${OnboardProgress.getFragment('viewer')}
-
-        safeToSpend
+        lastTransactionDate
       }
     `,
   },

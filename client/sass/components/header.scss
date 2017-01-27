@@ -49,42 +49,23 @@
     }
   }
 
-  &.onboarding-header {
-    text-align: center;
-    padding-left: 0;
-
-    .logo,
-    .logo-icon {
-      margin: 12px;
-      height: $appbar-height - 24px;
-    }
-
-    @media (max-width: $screen-xs-max) {
-      .logo {
-        display: none;
-      }
-    }
-
-    @media (min-width: $screen-sm-min) {
-      .logo-icon {
-        display: none;
-      }
-    }
-  }
-
-  .chatlio-btn {
+  > .updated-date {
+    height: $appbar-height;
+    padding-right: 32px;
+    padding-top: 10px;
     float: right;
-    margin-right: 32px;
 
-    .icon {
-      height: $appbar-height;
-      line-height: $appbar-height;
+    cursor: pointer;
+    text-align: right;
+
+    small {
+      display: block;
+      font-size: 12px;
     }
 
-    &.open {
-      .icon {
-        color: rgba(black, .5);
-      }
+    strong {
+      display: block;
+      font-size: 22px;
     }
   }
 }
