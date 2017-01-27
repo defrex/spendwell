@@ -17,18 +17,16 @@ services:
       - redis_data:/var/lib/redis/data
 
   celery:
-    build: .
+    image: defrex/spendwell:latest
     command: celery -A spendwell worker -l info
     links:
       - postgres
       - redis
     environment:
       - C_FORCE_ROOT=1
-    volumes:
-      - ./:/var/www
 
   app:
-    build: .
+    image: defrex/spendwell:latest
     command: python ./manage.py runserver 0.0.0.0:8000
     links:
       - postgres
@@ -38,20 +36,6 @@ services:
       - '8000:8000'
     expose:
       - '8000'
-    volumes:
-      - ./:/var/www
-
-  webpack:
-    build: .
-    command: node ./webpack/dev.server.js
-    links:
-      - app
-    ports:
-      - '3000:3000'
-    expose:
-      - '3000'
-    volumes:
-      - ./:/var/www
 
 volumes:
   postgresql_data:
