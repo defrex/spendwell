@@ -3,7 +3,7 @@
 -e git://github.com/defrex/django-resize#egg=django-resize
 
 Django==1.9.1
-psycopg2==2.6.1
+psycopg2==2.7
 django-filter==0.12.0
 django-bootstrap-form==3.2
 python-dateutil==2.4.2
