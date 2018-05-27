@@ -6,6 +6,7 @@
   "author": "defrex",
   "license": "LicenseRef-LICENSE",
   "scripts": {
+    "dev": "node ./webpack/dev.server.js",
     "build-dev": "NODE_ENV=development ./node_modules/.bin/webpack --config=./webpack/dev.config.js",
     "build-prod": "NODE_ENV=production ./node_modules/.bin/webpack --config=./webpack/prod.config.js"
   },
@@ -102,6 +103,7 @@
     "identity-obj-proxy": "^2.0.0",
     "jasmine-core": "^2.4.1",
     "jest-cli": "^13.0.0",
+    "local-ssl-proxy": "^1.3.0",
     "phantomjs-prebuilt": "^2.1.7",
     "react-addons-test-utils": "^15.1.0",
     "sass-lint": "^1.6.2",

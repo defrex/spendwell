@@ -1,4 +1,3 @@
-
 import _ from 'lodash'
 import { Component, PropTypes } from 'react'
 import Relay from 'react-relay'
@@ -61,7 +60,7 @@ class Dashboard extends Component {
     const { selected, createLabel, createBill, createGoal } = this.state
 
     const now = moment().startOf('month')
-    const current = year && month ? moment(`${year}-${month}-0`) : now
+    const current = year && month ? moment(`${year}-${month}-01`, 'YYYY-MM-DD') : now
     const first = moment(viewer.firstMonth, 'YYYY/MM')
     const periods = {
       first,

@@ -1,0 +1,9 @@
+{
+    "dev": {
+        "cert": "local/cert/dev.spendwell.co.cert",
+        "key": "local/cert/dev.spendwell.co.key",
+        "source": "8080",
+        "target": "3000",
+        "hostname": "dev.spendwell.co"
+    }
+}

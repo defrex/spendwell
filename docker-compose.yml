@@ -13,45 +13,51 @@ services:
 
   redis:
     image: redis:2.8.23
+    ports:
+      - '6379:6379'
     volumes:
       - redis_data:/var/lib/redis/data
 
-  celery:
-    build: .
-    command: celery -A spendwell worker -l info
-    links:
-      - postgres
-      - redis
-    environment:
-      - C_FORCE_ROOT=1
-    volumes:
-      - ./:/var/www
+  # celery:
+  #   build: .
+  #   command: celery -A spendwell worker -l info
+  #   links:
+  #     - postgres
+  #     - redis
+  #   environment:
+  #     - C_FORCE_ROOT=1
+  #   volumes:
+  #     - ./:/var/www
+  #   environment:
+  #     - DJANGO_SETTINGS_MODULE=spendwell.settings.local
 
-  app:
-    build: .
-    command: python ./manage.py runserver 0.0.0.0:8000
-    links:
-      - postgres
-      - redis
-      - celery
-    ports:
-      - '8000:8000'
-    expose:
-      - '8000'
-    volumes:
-      - ./:/var/www
+  # app:
+  #   build: .
+  #   command: python ./manage.py runserver 0.0.0.0:8000
+  #   links:
+  #     - postgres
+  #     - redis
+  #     - celery
+  #   ports:
+  #     - '8000:8000'
+  #   expose:
+  #     - '8000'
+  #   volumes:
+  #     - ./:/var/www
+  #   environment:
+  #     - DJANGO_SETTINGS_MODULE=spendwell.settings.local
 
-  webpack:
-    build: .
-    command: node ./webpack/dev.server.js
-    links:
-      - app
-    ports:
-      - '3000:3000'
-    expose:
-      - '3000'
-    volumes:
-      - ./:/var/www
+  # webpack:
+  #   build: .
+  #   command: node ./webpack/dev.server.js
+  #   links:
+  #     - app
+  #   ports:
+  #     - '3000:3000'
+  #   expose:
+  #     - '3000'
+  #   volumes:
+  #     - ./:/var/www
 
 volumes:
   postgresql_data:

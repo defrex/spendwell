@@ -1,8 +1,6 @@
-
 import { Component } from 'react'
 import Relay from 'react-relay'
 import { browserHistory } from 'react-router'
-import moment from 'moment'
 
 import Card from 'components/card'
 import SuperCard from 'components/super-card'
@@ -27,10 +25,11 @@ class DashboardSummary extends Component {
 
   handleStatusClick (type) {
     const { statusOpen } = this.state
-    if (statusOpen === type)
+    if (statusOpen === type) {
       this.setState({ statusOpen: null })
-    else
+    } else {
       this.setState({ statusOpen: type })
+    }
   }
 
   render () {

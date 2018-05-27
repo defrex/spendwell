@@ -1,9 +1,7 @@
 
 import os
 
-
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-
 
 SECRET_KEY = '&;v_CEg*j%lmzulK(qS.J1Brlezwshavj+`yu5nZc~]A6,G9fuHGWI$hw"WOe'
 
@@ -19,6 +17,7 @@ CSP_DEFAULT_SRC = ('https:', "'self'")
 CSP_STYLE_SRC = ('https:', "'self'", "'unsafe-inline'")
 CSP_IMG_SRC = ('https:', 'data:', "'self'")
 CSP_FONT_SRC = CSP_DEFAULT_SRC + ('data:',)
+CSP_CONNECT_SRC = ("'self'", "wss://{}".format(SITE_DOMAIN))
 
 INSTALLED_APPS = [
     'django.contrib.admin',

@@ -23,9 +23,10 @@ const server = new WebpackDevServer(compiler, {
   noInfo: true,
   port: 3000,
   publicPath: config.output.publicPath,
+  disableHostCheck: true,
   proxy: {
     '*': {
-      target: 'http://app:8000',
+      target: 'http://localhost:8000',
       secure: false,
     },
   },
