@@ -2,7 +2,7 @@
 # import raven
 
 from .base import *
-from .secrets import db_password, raven_dsn, mailgun_smtp_password
+# from .secrets import db_password, raven_dsn, mailgun_smtp_password
 
 
 SITE_DOMAIN = 'www.spendwell.co'
@@ -36,7 +36,7 @@ django_heroku.settings(locals())
 # LOGGING['loggers']['django']['handlers'] = ['console', 'sentry']
 
 
-EMAIL_HOST_PASSWORD = mailgun_smtp_password
+# EMAIL_HOST_PASSWORD = mailgun_smtp_password
 
 
 # RAVEN_PUBLIC_DSN = 'https://e82e41c7ae084a72b64d0571f6b4dcfd@app.getsentry.com/73495'
