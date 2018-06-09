@@ -1,5 +1,5 @@
 
-™import raven
+# import raven
 
 from .base import *
 from .secrets import db_password, raven_dsn, mailgun_smtp_password
